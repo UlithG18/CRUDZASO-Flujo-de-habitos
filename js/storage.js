@@ -9,12 +9,12 @@ export const storage = {
     },
 
     getHabits() {
-        const habits = localStorage.getItem("crudzaso_habitflow_habits_${userId}");
+        const habits = localStorage.getItem(`crudzaso_habitflow_habits_${userId}`);
         return habits ? JSON.parse(habits) : [];
     },
 
     saveHabits(habits) {
-        localStorage.setItem("crudzaso_habitflow_habits_${userId}", JSON.stringify(habits));
+        localStorage.setItem(`crudzaso_habitflow_habits_${userId}`, JSON.stringify(habits));
     },
 
     // getSession() {

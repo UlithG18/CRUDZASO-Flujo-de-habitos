@@ -5,11 +5,27 @@ export const adminUsers =
         userName: "Ulith",
         email: "ulith.18@gmail.com",
         password: "secret123",
+        habits: [{
+            id: 1,
+            title: "Studying",
+            frequency: "dayly",
+            priority: "high",
+            status: "in progress",
+            createdAt: "11/02/2025"
+        }]
     },
     {
         userName: "Antony",
         email: "tony.21@gmail.com",
-        password: "123secret"
+        password: "123secret",
+        habits: [{
+            id: 1,
+            title: "Visit students",
+            frequency: "weekly",
+            priority: "low",
+            status: "pending",
+            createdAt: "01/12/2026"
+        }]
     }]
 
 const loginForm = document.getElementById("login-form")
