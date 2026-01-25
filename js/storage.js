@@ -1,6 +1,6 @@
 export const storage = {
     getUsers() {
-        const users = localStorage.getItem("app_users");
+        const users = localStorage.getItem("users");
         return users ? JSON.parse(users) : [];
     },
 
@@ -8,24 +8,24 @@ export const storage = {
         localStorage.setItem("app_users", JSON.stringify(users));
     },
 
-    getIdeas() {
-        const ideas = localStorage.getItem("app_ideas");
-        return ideas ? JSON.parse(ideas) : [];
+    getHabits() {
+        const habits = localStorage.getItem("crudzaso_habitflow_habits_${userId}");
+        return habits ? JSON.parse(habits) : [];
     },
 
-    saveIdeas(ideas) {
-        localStorage.setItem("app_ideas", JSON.stringify(ideas));
+    saveHabits(habits) {
+        localStorage.setItem("crudzaso_habitflow_habits_${userId}", JSON.stringify(habits));
     },
 
-    getSession() {
-        return localStorage.getItem("app_session");
-    },
+    // getSession() {
+    //     return localStorage.getItem("app_session");
+    // },
 
-    saveSession(session) {
-        localStorage.setItem("app_session", session);
-    },
+    // saveSession(session) {
+    //     localStorage.setItem("app_session", session);
+    // },
 
-    clearSession() {
-        localStorage.removeItem("app_session");
-    },
+    // clearSession() {
+    //     localStorage.removeItem("app_session");
+    // },
 };

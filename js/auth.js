@@ -1,34 +1,44 @@
 import { storage } from "./storage.js";
 
+export const adminUsers =
+    [{
+        userName: "Ulith",
+        email: "ulith.18@gmail.com",
+        password: "secret123",
+    },
+    {
+        userName: "Antony",
+        email: "tony.21@gmail.com",
+        password: "123secret"
+    }]
+
 const loginForm = document.getElementById("login-form")
-const registerForm = document.getElementById("register-form");
 
 function userLogin() {
-    if (!loadUser.email && !loadUser.password) {
-        console.log("You need to create an account first")
-    } else {
-        window.location.href = 'login.html'
-    }
-}
-
-function userRegister() {
-    const loadUser = storage.getUsers()
     const userEmail = document.getElementById("input-email").value;
     const userPassword = document.getElementById("input-password").value;
-    const errorMessage = document.getElementById('WarningMsg');
+    const errorMessage = document.getElementById('warning-msg');
 
-    if (!userEmail || userPassword) {
-        errorMessage.textContent = "You need to fill all the blanks"
+    const findUser = adminUsers.find(user => user.email === userEmail && user.password === userPassword);
+
+    if (!userEmail || !userPassword) {
+        errorMessage.innerHTML =
+            `<div class="bg-purple-100 border-l-4 border-purple-500 text-fuchsia-700 p-4 mt-5" role="alert">
+                <p class="font-bold">Missing information...</p>
+                <p>You need to fill all the blanks</p>
+            </div>`;
         return;
     }
 
-    if (loadUser.email === userEmail && loadUser.password) {
-        errorMessage.innerHTML = `<p>You alredy have an account <a href="pages/login.html" class="text-sm underline">LOGIN</a> </p>`;
+    if (!findUser) {
+        errorMessage.innerHTML =
+            `<div class="bg-purple-100 border-l-4 border-purple-500 text-fuchsia-700 p-4 mt-5" role="alert">
+                <p class="font-bold">ALERT!</p>
+                <p>Your information doesn't match with the storeged data</p>
+            </div>`;
         return;
     } else {
-        loadUser.email = userEmail
-
-        storage.saveUsers(loadUser)
+        storage.saveUsers(findUser)
         window.location.href = 'habits.html'
     }
 }
@@ -36,9 +46,4 @@ function userRegister() {
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     userLogin()
-})
-
-registerForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    userRegister()
 })

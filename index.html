@@ -4,11 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="assets/riwi.png">
     <title>Habits Flow</title>
 </head>
 
-<body>
 
+<body class="w-full h-screen flex items-center justify-center bg-gradient-to-br from-sky-400 to-purple-900">
+    <form id="login-form" class="w-full md:w-1/3 rounded-lg">
+        <h2 class="text-2xl font-bold text-center text-fuchsia-900 mb-8">Habits Flow - Login</h2>
+        <div class="px-12 pb-10">
+            <div class="w-full mb-2">
+                <div class="flex items-center">
+                    <input id="input-email" type="email" placeholder="Email Address"
+                        class=" w-full border rounded px-3 py-2 text-gray-700 focus:outline-none" />
+                </div>
+            </div>
+            <div class="w-full mb-2">
+                <div class="flex items-center">
+                    <input id="input-password" type="password" placeholder="Password"
+                        class=" w-full border rounded px-3 py-2 text-gray-700 focus:outline-none" />
+                </div>
+            </div>
+            <p id="warning-msg"></p>
+            <button type="submit"
+                class=" bg-fuchsia-900 w-full py-2 mt-6 rounded-full bg-blue-400 text-gray-100 hover:bg-violet-600">
+                Login
+            </button>
+        </div>
+    </form>
+    <script type="module" src="js/auth.js"></script>
 </body>
+
+
 
 </html>
