@@ -17,7 +17,7 @@ const adminUsers =
             title: "Visit students",
             frequency: "weekly",
             priority: "low",
-            status: "pending",
+            hStatus: "pending",
             createdAt: "01/12/2026"
         }]
     }]

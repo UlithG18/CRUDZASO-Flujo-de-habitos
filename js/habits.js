@@ -18,28 +18,39 @@ titleName.textContent = userName;
 const habits = actualUser.habits || [];
 const habitsForm = document.getElementById('habits-form');
 
-const habitTitle = document.getElementById('habit-title');
-const habitFrecuency = document.getElementById('habit-frequency');
-const habitPriority = document.getElementById('habit-priority');
-const habitDate = document.getElementById('habit-day');
-const habitMonth = document.getElementById('habit-month');
-const habitYear = document.getElementById('habit-year');
+const habitTitle = document.getElementById('habit-title').value.trim();
+const habitFrecuency = document.getElementById('habit-frequency').value;
+const habitPriority = document.getElementById('habit-priority').value;
+const habitDay = document.getElementById('habit-day').value;
+const habitMonth = document.getElementById('habit-month').value;
+const habitYear = document.getElementById('habit-year').value;
+
+function createHabit(habit, userId) {
+    const habits = getHabits(userId);
+    habits.push(habit);
+    saveHabits(habits, userId);
+}
 
 habitsForm.addEventListener(`submit`, (e) => {
     e.preventDefault();
 
-    const title = habitTitle.value.trim();
-    const frequency = habitFrecuency.value;
-    const priority = habitPriority.value;
-    const day = habitDate.value;
-    const month = habitMonth.value;
-    const year = habitYear.value;
+    const date = `${habitDay}/${habitMonth}/${habitYear}`
 
-    const date = `${day}/${month}/${year}`
-
-    if (!title || !frequency || !priority || !date) {
+    if (!habitTitle || !habitFrecuency || !habitPriority || !date) {
         return
     };
+
+    const habitId = Date.now()
+
+    const habit = {
+        id: habitId,
+        title: title,
+        frequency: frequency,
+        priority: priority,
+        status: "pending",
+        date: date,
+    }
+
 
 
 

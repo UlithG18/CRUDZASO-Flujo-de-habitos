@@ -23,7 +23,7 @@ export const storage = {
 
     getSession() {
         const session = localStorage.getItem("actual_email");
-        return session ? JSON.parse(session) : "Hola"
+        return session ? JSON.parse(session) : "unkwon"
     },
 
     clearSession() {
