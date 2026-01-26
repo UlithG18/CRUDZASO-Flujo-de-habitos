@@ -1,17 +1,11 @@
 import { storage } from "./storage.js";
 
-export const adminUsers =
+const adminUsers =
     [{
         userName: "Ulith",
         email: "ulith.18@gmail.com",
         password: "secret123",
         habits: [{
-            id: 1,
-            title: "Studying",
-            frequency: "dayly",
-            priority: "high",
-            status: "in progress",
-            createdAt: "11/02/2025"
         }]
     },
     {
@@ -54,6 +48,8 @@ function userLogin() {
             </div>`;
         return;
     } else {
+        // --- also for the especific user ---
+        // storage.saveSession(userEmail)
         storage.saveUsers(findUser)
         window.location.href = 'habits.html'
     }

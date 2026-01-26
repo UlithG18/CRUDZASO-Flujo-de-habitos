@@ -1,11 +1,15 @@
 export const storage = {
+    saveUsers(users) {
+        localStorage.setItem("users", JSON.stringify(users));
+    },
+
     getUsers() {
         const users = localStorage.getItem("users");
         return users ? JSON.parse(users) : [];
     },
 
-    saveUsers(users) {
-        localStorage.setItem("users", JSON.stringify(users));
+    saveHabits(habits) {
+        localStorage.setItem(`crudzaso_habitflow_habits_${userId}`, JSON.stringify(habits));
     },
 
     getHabits() {
@@ -13,19 +17,16 @@ export const storage = {
         return habits ? JSON.parse(habits) : [];
     },
 
-    saveHabits(habits) {
-        localStorage.setItem(`crudzaso_habitflow_habits_${userId}`, JSON.stringify(habits));
+    saveSession(session) {
+        localStorage.setItem("actual_email", JSON.stringify(session));
     },
 
-    // getSession() {
-    //     return localStorage.getItem("app_session");
-    // },
+    getSession() {
+        const session = localStorage.getItem("actual_email");
+        return session ? JSON.parse(session) : "Hola"
+    },
 
-    // saveSession(session) {
-    //     localStorage.setItem("app_session", session);
-    // },
-
-    // clearSession() {
-    //     localStorage.removeItem("app_session");
-    // },
+    clearSession() {
+        localStorage.removeItem("actual_email");
+    },
 };
