@@ -1,9 +1,10 @@
 import { storage } from "./storage.js";
-import { adminUsers } from "./auth.js"
 
+document.addEventListener('DOMContentLoaded', function () {
+    const usersList = storage.getUsers();
+    const userName = usersList.userName
+    const titleName = document.getElementById("user-name");
+    titleName.textContent = userName;
+})
 
-usersList = storage.getUsers();
-actualUser = usersList.find(user => user.email === userEmail && user.password === userPassword);
-const titleName = document.getElementById("user-name")
-titleName.textContent = storage.userName
 

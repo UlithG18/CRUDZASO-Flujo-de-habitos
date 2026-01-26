@@ -5,7 +5,7 @@ export const storage = {
     },
 
     saveUsers(users) {
-        localStorage.setItem("app_users", JSON.stringify(users));
+        localStorage.setItem("users", JSON.stringify(users));
     },
 
     getHabits() {
