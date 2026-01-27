@@ -161,9 +161,9 @@
                     <select id="filter-priority"
                         class="bg-gradient-to-br from-sky-400/25 to-purple-900/25 rounded px-3 py-2">
                         <option>All priorities</option>
-                        <option>High</option>
-                        <option>Medium</option>
-                        <option>Low</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
                     </select>
                 </div>
 
@@ -174,17 +174,17 @@
         </section>
 
         <!-- Tasks List -->
-        <section id="tasks-list-pending" class="hidden flex flex-row flex-wrap">
+        <section id="tasks-list-pending" class="flex flex-row flex-wrap">
             <article id="article1" class="p-4 md:w-1/4">
 
             </article>
         </section>
-        <section id="tasks-list-progress" class="hidden flex flex-row flex-wrap">
+        <section id="tasks-list-progress" class="flex flex-row flex-wrap">
             <article id="article2" class="p-4 md:w-1/4">
 
             </article>
         </section>
-        <section id="tasks-list-completed" class="hidden flex flex-row flex-wrap">
+        <section id="tasks-list-completed" class="flex flex-row flex-wrap">
             <article id="article3" class="p-4 md:w-1/4">
 
             </article>
@@ -214,8 +214,8 @@
                         <select id="edit-frequency"
                             class="w-full border rounded px-3 py-2 bg-gradient-to-br from-sky-400/25 to-purple-900/25">
                             <option selected disabled>Frecuency</option>
-                            <option>Daily</option>
-                            <option>Weekly</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
                         </select>
                     </div>
 
@@ -224,9 +224,9 @@
                         <select id="edit-priority"
                             class="w-full border rounded px-3 py-2 bg-gradient-to-br from-sky-400/25 to-purple-900/25">
                             <option selected disabled>Priority</option>
-                            <option>Low</option>
-                            <option>Medium</option>
-                            <option>High</option>
+                            <option value="High">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">High</option>
                         </select>
                     </div>
                 </form>

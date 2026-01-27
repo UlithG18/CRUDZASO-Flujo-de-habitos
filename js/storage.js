@@ -5,17 +5,16 @@ export const storage = {
 
     getUsers() {
         const users = localStorage.getItem("users");
+        //return Array.isArray(users) ? users : [];
         return users ? JSON.parse(users) : [];
     },
 
-    saveHabit(habit, users, sessionUser) {
+    saveHabit(habitslist, habit, users, sessionUser) {
+        habitslist.push(habit)
+        sessionUser.habits = habitslist
 
-        const habits = sessionUser.habits || [];
-        habits.push(habit)
-        sessionUser.habits = habits
-
-        const index = users.findIndex(user => user.email === sessionUser.email);
-        users[index] = sessionUser;
+        const userIndex = users.findIndex(user => user.email === sessionUser.email);
+        users[userIndex] = sessionUser;
         saveUsers(users);
     },
 

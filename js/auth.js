@@ -13,13 +13,14 @@ const adminUsers =
         habits: [{
             id: 1,
             title: "Visit students",
-            frequency: "weekly",
-            priority: "low",
-            tatus: "pending",
-            createdAt: "01/12/2026"
+            frequency: "Weekly",
+            priority: "Low",
+            status: "Pending",
+            date: "01/12/2026"
         }]
     }]
 
+storage.saveUsers(adminUsers)
 const loginForm = document.getElementById("login-form")
 
 function userLogin() {
@@ -48,7 +49,6 @@ function userLogin() {
     } else {
 
         storage.saveSession(userEmail)
-        storage.saveUsers(findUser)
         window.location.href = 'habits.html'
     }
 }
