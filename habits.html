@@ -150,9 +150,9 @@
                     <select id="filter-status"
                         class="bg-gradient-to-br from-sky-400/25 to-purple-900/25 rounded px-3 py-2">
                         <option>All tasks</option>
-                        <option>Pending</option>
-                        <option>In progress</option>
-                        <option>Completed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="In progress">In progress</option>
+                        <option value="Completed">Completed</option>
                     </select>
                 </div>
 
@@ -175,30 +175,18 @@
 
         <!-- Tasks List -->
         <section id="tasks-list-pending" class="hidden flex flex-row flex-wrap">
-            <article class="p-4 md:w-1/4">
-                <div class="h-full border-2 border-gray-300 border-opacity-60 rounded-lg">
-                    <div class="p-6">
+            <article id="article1" class="p-4 md:w-1/4">
 
-                    </div>
-                </div>
             </article>
         </section>
         <section id="tasks-list-progress" class="hidden flex flex-row flex-wrap">
-            <article class="p-4 md:w-1/4">
-                <div class="h-full border-2 border-yellow-300 border-opacity-60 rounded-lg">
-                    <div class="p-6">
+            <article id="article2" class="p-4 md:w-1/4">
 
-                    </div>
-                </div>
             </article>
         </section>
         <section id="tasks-list-completed" class="hidden flex flex-row flex-wrap">
-            <article class="p-4 md:w-1/4">
-                <div class="h-full border-2 border-green-300 border-opacity-60 rounded-lg">
-                    <div class="p-6">
+            <article id="article3" class="p-4 md:w-1/4">
 
-                    </div>
-                </div>
             </article>
         </section>
     </div>

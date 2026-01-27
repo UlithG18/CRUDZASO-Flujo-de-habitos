@@ -8,8 +8,15 @@ export const storage = {
         return users ? JSON.parse(users) : [];
     },
 
-    saveHabits(habits) {
-        localStorage.setItem(`crudzaso_habitflow_habits_${userId}`, JSON.stringify(habits));
+    saveHabit(habit, users, sessionUser) {
+
+        const habits = sessionUser.habits || [];
+        habits.push(habit)
+        sessionUser.habits = habits
+
+        const index = users.findIndex(user => user.email === sessionUser.email);
+        users[index] = sessionUser;
+        saveUsers(users);
     },
 
     getHabits() {

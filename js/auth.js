@@ -5,8 +5,6 @@ const adminUsers =
         userName: "Ulith",
         email: "ulith.18@gmail.com",
         password: "secret123",
-        habits: [{
-        }]
     },
     {
         userName: "Antony",
@@ -48,8 +46,8 @@ function userLogin() {
             </div>`;
         return;
     } else {
-        // --- also for the especific user ---
-        // storage.saveSession(userEmail)
+
+        storage.saveSession(userEmail)
         storage.saveUsers(findUser)
         window.location.href = 'habits.html'
     }
