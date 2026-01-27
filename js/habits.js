@@ -15,45 +15,44 @@ const userName = actualUser.userName
 const titleName = document.getElementById("user-name");
 titleName.textContent = userName;
 
-const habits = actualUser.habits || [];
 const habitsForm = document.getElementById('habits-form');
 
-const habitTitle = document.getElementById('habit-title').value.trim();
-const habitFrecuency = document.getElementById('habit-frequency').value;
-const habitPriority = document.getElementById('habit-priority').value;
-const habitDay = document.getElementById('habit-day').value;
-const habitMonth = document.getElementById('habit-month').value;
-const habitYear = document.getElementById('habit-year').value;
 
-function createHabit(habit, userId) {
-    const habits = getHabits(userId);
-    habits.push(habit);
-    saveHabits(habits, userId);
-}
 
 habitsForm.addEventListener(`submit`, (e) => {
     e.preventDefault();
 
-    const date = `${habitDay}/${habitMonth}/${habitYear}`
+    const title = document.getElementById('habit-title').value.trim();
+    const frequency = document.getElementById('habit-frequency').value;
+    const priority = document.getElementById('habit-priority').value;
+    const day = document.getElementById('habit-day').value;
+    const month = document.getElementById('habit-month').value;
+    const year = document.getElementById('habit-year').value;
+    const date = `${day}/${month}/${year}`
 
-    if (!habitTitle || !habitFrecuency || !habitPriority || !date) {
+    if (!title || !frequency || !priority || !date) {
         return
     };
 
-    const habitId = Date.now()
+    const id = Date.now()
 
     const habit = {
-        id: habitId,
-        title: title,
-        frequency: frequency,
-        priority: priority,
+        id,
+        title,
+        frequency,
+        priority,
         status: "pending",
-        date: date,
+        date,
     }
 
+    const habits = actualUser.habits || [];
+    habits.push(habit)
 
-
-
+    actualUser.habits = habits
+    storage.saveUsers(actualUser)
 })
 
 
+function createHabit(title, frequency, priority, status) {
+
+}
