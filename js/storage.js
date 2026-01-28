@@ -15,7 +15,7 @@ export const storage = {
 
         const userIndex = users.findIndex(user => user.email === sessionUser.email);
         users[userIndex] = sessionUser;
-        saveUsers(users);
+        storage.saveUsers(users);
     },
 
     getHabits() {
@@ -35,4 +35,49 @@ export const storage = {
     clearSession() {
         localStorage.removeItem("actual_email");
     },
+
+    generateId() {
+        let lastId = localStorage.getItem("lastUserId");
+
+        if (!lastId) {
+            lastId = 0;
+        }
+
+        const newId = Number(lastId) + 1;
+        localStorage.setItem("lastUserId", newId);
+
+        return newId;
+    },
+
+    updateHabit(habitId, updates, usersList, actualUser) {
+        const habits = actualUser.habits;
+
+        for (let i = 0; i < habits.length; i++) {
+            if (habits[i].id === habitId) {
+                for (const key in updates) {
+                    habits[i][key] = updates[key];
+                }
+                break;
+            }
+        }
+
+        localStorage.setItem("users", JSON.stringify(usersList));
+    },
+
+    deleteHabit(habitIdToDelete, usersList, actualUser) {
+        const habitsList = actualUser.habits;
+
+        for (let habitIndex = 0; habitIndex < habitsList.length; habitIndex++) {
+            const currentHabit = habitsList[habitIndex];
+
+            if (currentHabit.id === habitIdToDelete) {
+                habitsList.splice(habitIndex, 1);
+                break;
+            }
+        }
+
+        storage.saveUsers(usersList);
+    }
+
+
 };

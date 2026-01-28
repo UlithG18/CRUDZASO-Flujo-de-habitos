@@ -10,14 +10,6 @@ const adminUsers =
         userName: "Antony",
         email: "tony.21@gmail.com",
         password: "123secret",
-        habits: [{
-            id: 1,
-            title: "Visit students",
-            frequency: "Weekly",
-            priority: "Low",
-            status: "Pending",
-            date: "01/12/2026"
-        }]
     }]
 
 storage.saveUsers(adminUsers)

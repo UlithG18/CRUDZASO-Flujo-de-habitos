@@ -14,13 +14,20 @@
 
         <header class="mb-8 text-center">
             <div
-                class="flex flex-row bg-gradient-to-br from-indigo-400/50 to-fuchsia-900 rounded-xl p-5 text-indigo-50 mb-4 gap-1 justify-center">
-                <p id="greet">
-                    Hi
-                <p id="user-name" class="text-fuchsia-400 font-bold"></p>, welcome to
-                <strong>Habits Flow</strong>
-                </p>
+                class="flex flex-row bg-gradient-to-br from-indigo-400/50 to-fuchsia-900 rounded-xl p-5 text-indigo-50 place-content-between mb-4">
+                <div class="flex flex-row justify-center mt-2 gap-1">
+                    <p id="greet">
+                        Hi
+                    <p id="user-name" class="text-fuchsia-400 font-bold"></p>, welcome to
+                    <strong>Habits Flow</strong>
+                    </p>
+                </div>
+
+                <button id="logout" class="bg-red-600 px-4 py-2 text-white rounded hover:bg-red-700">
+                    Logout
+                </button>
             </div>
+
 
             <h1 class="text-3xl font-bold text-purple-900">Habits Flow</h1>
             <p class="text-purple-900/50">Habits manager</p>
@@ -175,17 +182,17 @@
 
         <!-- Tasks List -->
         <section id="tasks-list-pending" class="flex flex-row flex-wrap">
-            <article id="article1" class="p-4 md:w-1/4">
+            <article id="article1" class="p-4 md:w-1/4 flex flex-col gap-4">
 
             </article>
         </section>
         <section id="tasks-list-progress" class="flex flex-row flex-wrap">
-            <article id="article2" class="p-4 md:w-1/4">
+            <article id="article2" class="p-4 md:w-1/4 flex flex-col gap-4">
 
             </article>
         </section>
         <section id="tasks-list-completed" class="flex flex-row flex-wrap">
-            <article id="article3" class="p-4 md:w-1/4">
+            <article id="article3" class="p-4 md:w-1/4 flex flex-col gap-4">
 
             </article>
         </section>
