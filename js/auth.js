@@ -1,18 +1,6 @@
 import { storage } from "./storage.js";
 
-const adminUsers =
-    [{
-        userName: "Ulith",
-        email: "ulith.18@gmail.com",
-        password: "secret123",
-    },
-    {
-        userName: "Antony",
-        email: "tony.21@gmail.com",
-        password: "123secret",
-    }]
-
-storage.saveUsers(adminUsers)
+const usersList = storage.getUsers()
 const loginForm = document.getElementById("login-form")
 
 function userLogin() {
@@ -20,7 +8,7 @@ function userLogin() {
     const userPassword = document.getElementById("input-password").value;
     const errorMessage = document.getElementById('warning-msg');
 
-    const findUser = adminUsers.find(user => user.email === userEmail && user.password === userPassword);
+    const findUser = usersList.find(user => user.email === userEmail && user.password === userPassword);
 
     if (!userEmail || !userPassword) {
         errorMessage.innerHTML =

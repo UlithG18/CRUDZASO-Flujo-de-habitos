@@ -18,10 +18,10 @@ export const storage = {
         storage.saveUsers(users);
     },
 
-    getHabits() {
-        const habits = localStorage.getItem(`crudzaso_habitflow_habits_${userId}`);
-        return habits ? JSON.parse(habits) : [];
+    getHabits(user) {
+        return user.habits || [];
     },
+
 
     saveSession(session) {
         localStorage.setItem("actual_email", JSON.stringify(session));
@@ -52,13 +52,12 @@ export const storage = {
     updateHabit(habitId, updates, usersList, actualUser) {
         const habits = actualUser.habits;
 
-        for (let i = 0; i < habits.length; i++) {
-            if (habits[i].id === habitId) {
-                for (const key in updates) {
-                    habits[i][key] = updates[key];
-                }
-                break;
-            }
+        const habit = habits.find(habit => habit.id === habitId);
+
+        if (!habit) return;
+
+        for (const key in updates) {
+            habit[key] = updates[key];
         }
 
         localStorage.setItem("users", JSON.stringify(usersList));
