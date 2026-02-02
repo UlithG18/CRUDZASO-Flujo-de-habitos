@@ -1,39 +1,46 @@
+// Import storage module for handling data persistence
 import { storage } from "./storage.js";
 
-const editForm = document.getElementById("edit-task-form");
-const cancelBtn = document.getElementById("cancel-edit")
-const logout = document.getElementById("logout");
-let editingHabitId = null;
-let actualUser = null;
-let habits = [];
+// DOM elements
+const editForm = document.getElementById("edit-task-form"); // Form used for editing habits
+const cancelBtn = document.getElementById("cancel-edit"); // Button to cancel editing
+const logout = document.getElementById("logout"); // Logout button
 
+// State variables
+let editingHabitId = null; // Stores the ID of the habit being edited
+let actualUser = null; // The currently logged-in user
+let allHabits = []; // All habits in the system (not used extensively here)
+let habits = []; // User-specific habits array
+
+// Get the currently logged-in user session
 const sessionUser = storage.getSession();
 
+// Redirect if there is no session
 if (!sessionUser) {
     window.location.href = "index.html";
 }
 
+// ------------------ Initialization ------------------
 async function init() {
-    const users = await storage.getUsers();
-    actualUser = users.find(user => user.id === sessionUser.id);
+    const users = await storage.getUsers(); // Fetch all users
+    actualUser = users.find(user => user.id === sessionUser.id); // Find current user
 
     if (!actualUser) {
         storage.clearSession();
-        window.location.href = "index.html";
+        window.location.href = "index.html"; // If user not found, redirect
     }
 
-    habits = actualUser.habits || [];
-    activeFilters();
+    habits = actualUser.habits || []; // Load the user's habits
+    activeFilters(); // Render with current filters
 
+    // Display username in the UI
     const titleName = document.getElementById("user-name");
     titleName.textContent = actualUser.userName;
 }
 
-init();
+init(); // Call initialization
 
-
-// Initial values needed
-
+// ------------------ DOM Elements for Habit Creation & Filters ------------------
 const habitsForm = document.getElementById("habits-form");
 const titleHabit = document.getElementById("habit-title");
 const frequencyHabit = document.getElementById("habit-frequency");
@@ -42,57 +49,42 @@ const dayHabit = document.getElementById("habit-day");
 const monthHabit = document.getElementById("habit-month");
 const yearHabit = document.getElementById("habit-year");
 
-const statusFilter = document.getElementById("status-filter")
-const priorityFilter = document.getElementById("priority-filter")
-let activeStatus = "all";
-let activePriority = "all";
+const statusFilter = document.getElementById("status-filter");
+const priorityFilter = document.getElementById("priority-filter");
 
+// Filter and search state
+let searchLetters = ""; // Not currently used for searching
+let activeStatus = "all"; // Status filter
+let activePriority = "all"; // Priority filter
 
+// ------------------ Helper Functions ------------------
 
-// Define where the habit card goes
-
+// Determine which column a habit should go into based on status
 function getHabitColumn(status) {
     if (status === "In progress") return document.getElementById("article2");
     if (status === "Completed") return document.getElementById("article3");
-    return document.getElementById("article1");
+    return document.getElementById("article1"); // Pending
 }
 
-// Priority text color
-
+// Return text color based on priority
 function getPriority(priority) {
     if (priority === "High") return "red";
     if (priority === "Medium") return "yellow";
-    return "green";
+    return "green"; // Low
 }
 
-// Cards desing colors depends on status 
-
+// Return card border and background colors based on status
 function getStatus(status) {
     if (status === "In progress") {
-        return {
-            border: "border-yellow-300",
-            bg: "bg-yellow-600",
-            hover: "hover:bg-yellow-700"
-        };
+        return { border: "border-yellow-300", bg: "bg-yellow-600", hover: "hover:bg-yellow-700" };
     }
-
     if (status === "Completed") {
-        return {
-            border: "border-green-300",
-            bg: "bg-green-600",
-            hover: "hover:bg-green-700"
-        };
+        return { border: "border-green-300", bg: "bg-green-600", hover: "hover:bg-green-700" };
     }
-
-    return {
-        border: "border-gray-300",
-        bg: "bg-gray-600",
-        hover: "hover:bg-gray-700"
-    };
+    return { border: "border-gray-300", bg: "bg-gray-600", hover: "hover:bg-gray-700" }; // Pending
 }
 
-// Habits creation and modifications
-
+// ------------------ Habit Card Creation ------------------
 function createHabitCard(habit) {
     const priorityColor = getPriority(habit.priority);
     const statusColor = getStatus(habit.status);
@@ -101,89 +93,80 @@ function createHabitCard(habit) {
     card.className = `w-full border-2 ${statusColor.border} rounded-lg`;
     card.dataset.id = habit.id;
 
+    // Inner HTML of the card
     card.innerHTML =
         `<div class="p-6 flex flex-col gap-3">
-        <div class="flex justify-between items-start">
-            
-            <h1 class="font-medium text-black">${habit.title}</h1>
-            
-            <div class="hover:bg-white flex justify-center rounded-lg">
-                <button type="button" id="edit-btn" class="px-4 rounded-lg hover:bg-gradient-to-br from-sky-400/25 to-purple-900/25">
-                    <img src="assets/icons/pencil-fill.svg" alt="" class="h-5 my-1">
+            <div class="flex justify-between items-start">
+                <h1 class="font-medium text-black">${habit.title}</h1>
+                <div class="hover:bg-white flex justify-center rounded-lg">
+                    <button type="button" id="edit-btn" class="px-4 rounded-lg hover:bg-gradient-to-br from-sky-400/25 to-purple-900/25">
+                        <img src="assets/icons/pencil-fill.svg" alt="" class="h-5 my-1">
+                    </button>
+                </div>
+                <div class="hover:bg-white flex justify-center rounded-lg">
+                    <button type="button" id="delete-btn" class="px-4 rounded-lg hover:bg-gradient-to-br from-sky-400/25 to-purple-900/25">
+                        <img src="assets/icons/trash-fill.svg" class="h-5">
+                    </button>
+                </div>
+            </div>
+            <h2 class="text-sky-500">${habit.frequency}</h2>
+            <h3 class="text-${priorityColor}-700">${habit.priority}</h3>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">${habit.date}</span>
+                <button type="button" id="status-btn" class="${statusColor.bg} ${statusColor.hover} text-white px-3 py-1 rounded">
+                    ${habit.status}
                 </button>
             </div>
-            
-            <div class="hover:bg-white flex justify-center rounded-lg">                
-                <button type="button" id="delete-btn" class="px-4 rounded-lg hover:bg-gradient-to-br from-sky-400/25 to-purple-900/25">
-                    <img src="assets/icons/trash-fill.svg" class="h-5">
-                </button>    
-            </div>
-        </div>
+        </div>`;
 
-        <h2 class="text-sky-500">${habit.frequency}</h2>
-        <h3 class="text-${priorityColor}-700">${habit.priority}</h3>
+    // ------------------ Card Event Listeners ------------------
 
-        <div class="flex justify-between items-center">
-            <span class="text-sm text-gray-600">${habit.date}</span>
-            <button type="button" id="status-btn" class="${statusColor.bg} ${statusColor.hover} text-white px-3 py-1 rounded">
-                ${habit.status}
-            </button>
-        </div>
-    </div>`;
-
-    // delete habits
-
+    // Delete habit
     card.querySelector("#delete-btn").addEventListener("click", async (e) => {
         e.preventDefault();
-        await storage.deleteHabit(actualUser, habit.id);
-        habits = storage.getHabits(actualUser);
-        activeFilters();
+        await storage.deleteHabit(actualUser, habit.id); // Delete from storage
+        habits = storage.getHabits(actualUser); // Refresh local habits
+        activeFilters(); // Re-render with filters
     });
 
-    // Edit habits
-
+    // Edit habit
     card.querySelector("#edit-btn").addEventListener("click", (e) => {
         e.preventDefault();
-
         editingHabitId = habit.id;
 
+        // Fill edit form with current habit info
         document.getElementById("edit-title").value = habit.title;
         document.getElementById("edit-frequency").value = habit.frequency;
         document.getElementById("edit-priority").value = habit.priority;
 
+        // Show edit modal
         document.getElementById("edit-task").className = "absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center";
     });
 
-    // Status update
-
+    // Update status
     card.querySelector("#status-btn").addEventListener("click", async (e) => {
         e.preventDefault();
         const nextStatus =
-            habit.status === "Pending"
-                ? "In progress"
-                : habit.status === "In progress"
-                    ? "Completed"
-                    : "Pending";
+            habit.status === "Pending" ? "In progress" :
+                habit.status === "In progress" ? "Completed" :
+                    "Pending";
 
-        await storage.updateHabit(actualUser, habit.id, { status: nextStatus });
-        habits = storage.getHabits(actualUser);
-        activeFilters();
+        await storage.updateHabit(actualUser, habit.id, { status: nextStatus }); // Update storage
+        habits = storage.getHabits(actualUser); // Refresh local habits
+        activeFilters(); // Re-render
     });
 
     return card;
 }
 
-// Render habits
-
+// ------------------ Render Habits ------------------
 function renderHabits(habits) {
-
     const columns = [
         document.getElementById("article1"),
         document.getElementById("article2"),
         document.getElementById("article3")
     ];
-
-    columns.forEach(column => (column.innerHTML = ""));
+    columns.forEach(column => (column.innerHTML = "")); // Clear columns
 
     habits.forEach(habit => {
         const column = getHabitColumn(habit.status);
@@ -192,26 +175,23 @@ function renderHabits(habits) {
     });
 }
 
-// created habit
-
+// ------------------ Habit Creation ------------------
 async function createHabit(habit) {
-    await storage.saveHabit(actualUser, habit);
-    habits = storage.getHabits(actualUser);
-    activeFilters();
+    await storage.saveHabit(actualUser, habit); // Save habit in storage
+    habits = storage.getHabits(actualUser); // Refresh local habits
+    activeFilters(); // Re-render
 }
 
+// ------------------ Filters ------------------
 function activeFilters() {
     const filtered = habits.filter(habit => {
-
         const statusMatch = activeStatus === "all" || habit.status === activeStatus;
         const priorityMatch = activePriority === "all" || habit.priority === activePriority;
-
         return statusMatch && priorityMatch;
     });
 
     renderHabits(filtered);
 }
-
 
 function setStatusFilter(value) {
     activeStatus = value;
@@ -223,10 +203,11 @@ function setPriorityFilter(value) {
     activeFilters();
 }
 
+// ------------------ Event Listeners ------------------
 
+// Submit edit form
 editForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     if (!editingHabitId) return;
 
     const title = document.getElementById("edit-title").value.trim();
@@ -234,23 +215,21 @@ editForm.addEventListener("submit", async (e) => {
     const priority = document.getElementById("edit-priority").value;
 
     await storage.updateHabit(actualUser, editingHabitId, { title, frequency, priority });
-
     habits = storage.getHabits(actualUser);
     activeFilters();
 
-    editingHabitId = null;
-    document.getElementById("edit-task").className = "hidden";
+    editingHabitId = null; // Reset edit
+    document.getElementById("edit-task").className = "hidden"; // Hide modal
 });
 
+// Cancel edit
 cancelBtn.addEventListener("click", (e) => {
     e.preventDefault();
     editingHabitId = null;
     document.getElementById("edit-task").className = "hidden";
 });
 
-
-// submit for the creation
-
+// Submit new habit
 habitsForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -263,24 +242,17 @@ habitsForm.addEventListener("submit", (e) => {
         date: `${dayHabit.value}/${monthHabit.value}/${yearHabit.value}`
     };
 
-    if (!habit.title || !habit.frequency || !habit.priority) return;
-
-    createHabit(habit);
-    habitsForm.reset();
+    if (!habit.title || !habit.frequency || !habit.priority) return; // Validate
+    createHabit(habit); // Save habit
+    habitsForm.reset(); // Clear form
 });
 
-statusFilter.addEventListener("change", () => {
-    setStatusFilter(e.target.value);
-});
+// Filter change events
+statusFilter.addEventListener("change", () => setStatusFilter(e.target.value));
+priorityFilter.addEventListener("change", () => setPriorityFilter(e.target.value));
 
-priorityFilter.addEventListener("change", () => {
-    setPriorityFilter(e.target.value);
-});
-
-
-// logout option
-
+// Logout
 logout.addEventListener("click", () => {
-    storage.clearSession();
-    window.location.href = "index.html";
+    storage.clearSession(); // Clear session
+    window.location.href = "index.html"; // Redirect
 });

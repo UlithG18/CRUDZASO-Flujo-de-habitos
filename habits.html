@@ -4,17 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Page favicon -->
     <link rel="icon" href="assets/riwi.png">
     <title>Habits Flow</title>
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-sky-400 to-purple-900">
-    <div class="max-w-7xl mx-auto py-12 px-4">
 
+    <div class="max-w-7xl mx-auto py-12 px-4">
+        <!-- ------------------ Header Section ------------------ -->
         <header class="mb-8 text-center">
             <div
                 class="flex flex-row bg-gradient-to-br from-indigo-400/50 to-fuchsia-900 rounded-xl p-5 text-indigo-50 place-content-between mb-4">
+
+                <!-- User greeting and username -->
                 <div class="flex flex-row justify-center mt-2 gap-1">
                     <p id="greet">
                         Hi
@@ -23,28 +28,33 @@
                     </p>
                 </div>
 
+                <!-- Logout button -->
                 <button id="logout" class="bg-red-600 px-4 py-2 text-white rounded hover:bg-red-700">
                     Logout
                 </button>
             </div>
 
-
+            <!-- Page title -->
             <h1 class="text-3xl font-bold text-purple-900">Habits Flow</h1>
             <p class="text-purple-900/50">Habits manager</p>
         </header>
 
-
-        <!-- Task Creation Form -->
+        <!-- ------------------ Task Creation Form ------------------ -->
         <section class="bg-gradient-to-br from-indigo-400 to-fuchsia-900 rounded-lg shadow mb-6">
             <div class="p-6">
                 <h5 class="text-lg font-semibold mb-4">Create new task</h5>
+
+                <!-- Form for creating new habits -->
                 <form id="habits-form" class="space-y-4">
+
+                    <!-- Task title input -->
                     <div>
                         <label for="habit-title" class="block mb-1 font-medium">Title</label>
                         <input type="text" id="habit-title" placeholder="Task title"
                             class="bg-gradient-to-br from-sky-400/25 to-purple-900/25 w-full rounded px-3 py-2" />
                     </div>
 
+                    <!-- Frequency and Priority selection -->
                     <div class="flex flex-row gap-3 place-content-around">
                         <div class="md:w-1/3">
                             <label for="habit-frequency" class="block mb-1 font-medium">Frequency</label>
@@ -68,12 +78,14 @@
                         </div>
                     </div>
 
+                    <!-- Date selection (Day / Month / Year) -->
                     <div class="flex flex-row gap-3 place-content-around">
                         <div class="md:w-1/3">
                             <label for="habit-day" class="block mb-1 font-medium">Day</label>
                             <select id="habit-day"
                                 class="bg-gradient-to-br from-sky-400/25 to-purple-900/25 w-full rounded px-3 py-2">
                                 <option selected disabled>Select day</option>
+                                <!-- Options 1-31 -->
                                 <option value="01">1</option>
                                 <option value="02">2</option>
                                 <option value="03">3</option>
@@ -107,25 +119,27 @@
                                 <option value="31">31</option>
                             </select>
                         </div>
+
                         <div class="md:w-1/3">
                             <label for="habit-month" class="block mb-1 font-medium">Month</label>
                             <select id="habit-month"
                                 class="bg-gradient-to-br from-sky-400/25 to-purple-900/25 w-full rounded px-3 py-2">
                                 <option selected disabled>Select Month</option>
                                 <option value="01">January</option>
-                                <option value="02">Februry</option>
+                                <option value="02">February</option>
                                 <option value="03">March</option>
                                 <option value="04">April</option>
                                 <option value="05">May</option>
-                                <option value="06">Jun</option>
+                                <option value="06">June</option>
                                 <option value="07">July</option>
-                                <option value="08">Agoust</option>
+                                <option value="08">August</option>
                                 <option value="09">September</option>
                                 <option value="10">October</option>
                                 <option value="11">November</option>
-                                <option value="12">Dicember</option>
+                                <option value="12">December</option>
                             </select>
                         </div>
+
                         <div class="md:w-1/3">
                             <label for="habit-year" class="block mb-1 font-medium">Year</label>
                             <select id="habit-year"
@@ -137,6 +151,8 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- Submit button -->
                     <button type="submit" class="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700">
                         Create task
                     </button>
@@ -144,13 +160,17 @@
             </div>
         </section>
 
+        <!-- ------------------ Filters Section ------------------ -->
         <section id="filters-container" class="bg-gradient-to-br from-indigo-400 to-fuchsia-900 rounded-lg shadow mb-6">
             <div class="p-6 flex flex-wrap gap-6 items-end">
+
+                <!-- Task counter -->
                 <div>
                     <h6 class="font-semibold">Current tasks</h6>
                     <p id="counter" class="text-xl font-bold">0</p>
                 </div>
 
+                <!-- Status filter -->
                 <div class="flex flex-col">
                     <label for="status-filter" class="mb-1 font-medium">Status</label>
                     <select id="status-filter"
@@ -162,6 +182,7 @@
                     </select>
                 </div>
 
+                <!-- Priority filter -->
                 <div class="flex flex-col">
                     <label for="priority-filter" class="mb-1 font-medium">Priority</label>
                     <select id="priority-filter"
@@ -173,6 +194,7 @@
                     </select>
                 </div>
 
+                <!-- Reset filters button -->
                 <button type="reset" id="clear-filters"
                     class="bg-violet-600 px-4 py-2 text-white rounded hover:bg-violet-700">
                     Reset
@@ -180,49 +202,49 @@
             </div>
         </section>
 
+        <!-- ------------------ Habits Columns Section ------------------ -->
         <section class="flex flex-row w-full items-start gap-6">
-
-            <article id="article1" class="w-1/3 flex flex-col gap-4">
-
-            </article>
-
-            <article id="article2" class="w-1/3 flex flex-col gap-4">
-
-            </article>
-
-            <article id="article3" class="w-1/3 flex flex-col gap-4">
-
-            </article>
-
+            <article id="article1" class="w-1/3 flex flex-col gap-4"></article>
+            <article id="article2" class="w-1/3 flex flex-col gap-4"></article>
+            <article id="article3" class="w-1/3 flex flex-col gap-4"></article>
         </section>
 
     </div>
 
+    <!-- ------------------ Edit Habit Modal ------------------ -->
     <div id="edit-task" class="hidden absolute inset-0 bg-black bg-opacity-60 items-center justify-center">
         <div
             class="bg-gradient-to-br from-indigo-400 to-fuchsia-900 rounded-lg w-full max-w-2xl absolute left-80 bottom-20">
+
+            <!-- Modal header -->
             <div class="flex justify-between items-center p-4 border-b">
                 <h5 class="text-lg font-semibold">Edit habit</h5>
                 <button class="text-gray-500 text-xl">&times;</button>
             </div>
 
+            <!-- Modal form for editing -->
             <div class="p-6">
                 <form id="edit-task-form" class="space-y-4">
+                    <!-- Edit title -->
                     <div>
                         <label for="edit-title" class="block mb-1 font-medium">Title</label>
                         <input id="edit-title"
                             class="w-full border rounded px-3 py-2 bg-gradient-to-br from-sky-400/25 to-purple-900/25"
-                            placeholder="New title"></input>
+                            placeholder="New title">
                     </div>
+
+                    <!-- Edit frequency -->
                     <div>
                         <label for="edit-frequency" class="block mb-1 font-medium">Frequency</label>
                         <select id="edit-frequency"
                             class="w-full border rounded px-3 py-2 bg-gradient-to-br from-sky-400/25 to-purple-900/25">
-                            <option selected disabled>Frecuency</option>
+                            <option selected disabled>Frequency</option>
                             <option value="Daily">Daily</option>
                             <option value="Weekly">Weekly</option>
                         </select>
                     </div>
+
+                    <!-- Edit priority -->
                     <div>
                         <label for="edit-priority" class="block mb-1 font-medium">Priority</label>
                         <select id="edit-priority"
@@ -233,6 +255,8 @@
                             <option value="High">High</option>
                         </select>
                     </div>
+
+                    <!-- Buttons -->
                     <div class="flex justify-end gap-3 p-4 border-t">
                         <button type="button" id="cancel-edit" class="bg-gray-300 px-4 py-2 rounded">
                             Cancel
@@ -246,5 +270,9 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript module -->
     <script type="module" src="./js/habits.js"></script>
 </body>
+
+</html>
