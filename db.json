@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "id": "0",
+      "userName": "Juls",
+      "email": "juls@gmail.com",
+      "password": "123",
+      "role": "admin",
+      "habits": []
+    },
+    {
+      "id": "1",
+      "userName": "Ulith",
+      "email": "ulith.18@gmail.com",
+      "password": "secret123",
+      "role": "user",
+      "habits": [
+        {
+          "id": 1770042530006,
+          "title": "JOJOJ",
+          "frequency": "Daily",
+          "priority": "Medium",
+          "status": "Pending",
+          "date": "18/02/25"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "userName": "Antony",
+      "email": "tony.21@gmail.com",
+      "password": "123secret",
+      "role": "user",
+      "habits": [
+        {
+          "id": 1770044132542,
+          "title": "Algo mejor",
+          "frequency": "Weekly",
+          "priority": "Low",
+          "status": "In progress",
+          "date": "18/04/26"
+        }
+      ]
+    }
+  ]
+}

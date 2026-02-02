@@ -4,23 +4,33 @@ const editForm = document.getElementById("edit-task-form");
 const cancelBtn = document.getElementById("cancel-edit")
 const logout = document.getElementById("logout");
 let editingHabitId = null;
+let actualUser = null;
+let habits = [];
 
-const usersList = storage.getUsers();
-const actualEmail = storage.getSession();
-const actualUser = usersList.find(user => user.email === actualEmail);
+const sessionUser = storage.getSession();
 
-// security
-
-if (!actualUser) {
+if (!sessionUser) {
     window.location.href = "index.html";
 }
 
-let habits = storage.getHabits(actualUser);
+async function init() {
+    const users = await storage.getUsers();
+    actualUser = users.find(user => user.id === sessionUser.id);
 
-// User personalized greeting
+    if (!actualUser) {
+        storage.clearSession();
+        window.location.href = "index.html";
+    }
 
-const titleName = document.getElementById("user-name");
-titleName.textContent = actualUser.userName;
+    habits = actualUser.habits || [];
+    activeFilters();
+
+    const titleName = document.getElementById("user-name");
+    titleName.textContent = actualUser.userName;
+}
+
+init();
+
 
 // Initial values needed
 
@@ -34,8 +44,6 @@ const yearHabit = document.getElementById("habit-year");
 
 const statusFilter = document.getElementById("status-filter")
 const priorityFilter = document.getElementById("priority-filter")
-const filtersHabitslist = storage.getHabits(actualUser);
-let habitsFiltered = [...filtersHabitslist];
 let activeStatus = "all";
 let activePriority = "all";
 
@@ -94,24 +102,22 @@ function createHabitCard(habit) {
     card.dataset.id = habit.id;
 
     card.innerHTML =
-
         `<div class="p-6 flex flex-col gap-3">
         <div class="flex justify-between items-start">
             
             <h1 class="font-medium text-black">${habit.title}</h1>
             
             <div class="hover:bg-white flex justify-center rounded-lg">
-                <button id="edit-btn" class="px-4 rounded-lg hover:bg-gradient-to-br from-sky-400/25 to-purple-900/25">
+                <button type="button" id="edit-btn" class="px-4 rounded-lg hover:bg-gradient-to-br from-sky-400/25 to-purple-900/25">
                     <img src="assets/icons/pencil-fill.svg" alt="" class="h-5 my-1">
                 </button>
             </div>
             
             <div class="hover:bg-white flex justify-center rounded-lg">                
-                <button id="delete-btn" class="px-4 rounded-lg hover:bg-gradient-to-br from-sky-400/25 to-purple-900/25">
+                <button type="button" id="delete-btn" class="px-4 rounded-lg hover:bg-gradient-to-br from-sky-400/25 to-purple-900/25">
                     <img src="assets/icons/trash-fill.svg" class="h-5">
                 </button>    
             </div>
-               
         </div>
 
         <h2 class="text-sky-500">${habit.frequency}</h2>
@@ -119,7 +125,7 @@ function createHabitCard(habit) {
 
         <div class="flex justify-between items-center">
             <span class="text-sm text-gray-600">${habit.date}</span>
-            <button id="status-btn" class="${statusColor.bg} ${statusColor.hover} text-white px-3 py-1 rounded">
+            <button type="button" id="status-btn" class="${statusColor.bg} ${statusColor.hover} text-white px-3 py-1 rounded">
                 ${habit.status}
             </button>
         </div>
@@ -127,15 +133,18 @@ function createHabitCard(habit) {
 
     // delete habits
 
-    card.querySelector("#delete-btn").addEventListener("click", () => {
-        storage.deleteHabit(habit.id, usersList, actualUser);
+    card.querySelector("#delete-btn").addEventListener("click", async (e) => {
+        e.preventDefault();
+        await storage.deleteHabit(actualUser, habit.id);
         habits = storage.getHabits(actualUser);
-        renderHabits(habits);
+        activeFilters();
     });
 
     // Edit habits
 
-    card.querySelector("#edit-btn").addEventListener("click", () => {
+    card.querySelector("#edit-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+
         editingHabitId = habit.id;
 
         document.getElementById("edit-title").value = habit.title;
@@ -147,7 +156,8 @@ function createHabitCard(habit) {
 
     // Status update
 
-    card.querySelector("#status-btn").addEventListener("click", () => {
+    card.querySelector("#status-btn").addEventListener("click", async (e) => {
+        e.preventDefault();
         const nextStatus =
             habit.status === "Pending"
                 ? "In progress"
@@ -155,9 +165,9 @@ function createHabitCard(habit) {
                     ? "Completed"
                     : "Pending";
 
-        storage.updateHabit(habit.id, { status: nextStatus }, usersList, actualUser);
+        await storage.updateHabit(actualUser, habit.id, { status: nextStatus });
         habits = storage.getHabits(actualUser);
-        renderHabits(habits);
+        activeFilters();
     });
 
     return card;
@@ -184,15 +194,14 @@ function renderHabits(habits) {
 
 // created habit
 
-function createHabit(habit) {
-    storage.saveHabit(habits, habit, usersList, actualUser);
-
+async function createHabit(habit) {
+    await storage.saveHabit(actualUser, habit);
     habits = storage.getHabits(actualUser);
-    renderHabits(habits);
+    activeFilters();
 }
 
 function activeFilters() {
-    habitsFiltered = filtersHabitslist.filter(habit => {
+    const filtered = habits.filter(habit => {
 
         const statusMatch = activeStatus === "all" || habit.status === activeStatus;
         const priorityMatch = activePriority === "all" || habit.priority === activePriority;
@@ -200,8 +209,9 @@ function activeFilters() {
         return statusMatch && priorityMatch;
     });
 
-    renderHabits(habitsFiltered);
+    renderHabits(filtered);
 }
+
 
 function setStatusFilter(value) {
     activeStatus = value;
@@ -214,7 +224,7 @@ function setPriorityFilter(value) {
 }
 
 
-editForm.addEventListener("submit", (e) => {
+editForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (!editingHabitId) return;
@@ -223,16 +233,17 @@ editForm.addEventListener("submit", (e) => {
     const frequency = document.getElementById("edit-frequency").value;
     const priority = document.getElementById("edit-priority").value;
 
-    storage.updateHabit(editingHabitId, { title, frequency, priority }, usersList, actualUser);
+    await storage.updateHabit(actualUser, editingHabitId, { title, frequency, priority });
 
     habits = storage.getHabits(actualUser);
-    renderHabits(habits);
+    activeFilters();
 
     editingHabitId = null;
     document.getElementById("edit-task").className = "hidden";
 });
 
-cancelBtn.addEventListener("click", () => {
+cancelBtn.addEventListener("click", (e) => {
+    e.preventDefault();
     editingHabitId = null;
     document.getElementById("edit-task").className = "hidden";
 });
@@ -258,11 +269,11 @@ habitsForm.addEventListener("submit", (e) => {
     habitsForm.reset();
 });
 
-statusFilter.addEventListener("change", (e) => {
+statusFilter.addEventListener("change", () => {
     setStatusFilter(e.target.value);
 });
 
-priorityFilter.addEventListener("change", (e) => {
+priorityFilter.addEventListener("change", () => {
     setPriorityFilter(e.target.value);
 });
 
@@ -273,7 +284,3 @@ logout.addEventListener("click", () => {
     storage.clearSession();
     window.location.href = "index.html";
 });
-
-// initialization
-
-renderHabits(habits);

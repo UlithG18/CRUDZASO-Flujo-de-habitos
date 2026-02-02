@@ -1,82 +1,87 @@
 export const storage = {
-    saveUsers(users) {
-        localStorage.setItem("users", JSON.stringify(users));
+    async saveUser(user) {
+        const response = await fetch("http://localhost:3000/users", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user)
+        });
+
+        return response.json();
     },
 
-    getUsers() {
-        const users = localStorage.getItem("users");
-        //return Array.isArray(users) ? users : [];
-        return users ? JSON.parse(users) : [];
+    // Loads products from API
+    async getUsers() {
+        try {
+            const data = await fetch(`http://localhost:3000/users`);
+            const users = await data.json();
+            return users || []
+        } catch (error) {
+            warningMsg.textContent = "Error connecting to server";
+            console.error("Error loading products:", error);
+        }
     },
 
-    saveHabit(habitslist, habit, users, sessionUser) {
-        habitslist.push(habit)
-        sessionUser.habits = habitslist
+    async updateUser(user) {
+        await fetch(`http://localhost:3000/users/${user.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user)
+        });
+    },
 
-        const userIndex = users.findIndex(user => user.email === sessionUser.email);
-        users[userIndex] = sessionUser;
-        storage.saveUsers(users);
+    async updateUserHabits(userId, habits) {
+        await fetch(`http://localhost:3000/users/${userId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ habits })
+        });
+    },
+
+    async saveHabit(user, habit) {
+        user.habits = user.habits || [];
+        user.habits.push(habit);
+        await this.updateUserHabits(user.id, user.habits);
     },
 
     getHabits(user) {
+        if (!user) return [];
         return user.habits || [];
     },
 
-
-    saveSession(session) {
-        localStorage.setItem("actual_email", JSON.stringify(session));
-    },
-
-    getSession() {
-        const session = localStorage.getItem("actual_email");
-        return session ? JSON.parse(session) : "unkwon"
-    },
-
-    clearSession() {
-        localStorage.removeItem("actual_email");
-    },
-
-    generateId() {
-        let lastId = localStorage.getItem("lastUserId");
-
-        if (!lastId) {
-            lastId = 0;
-        }
-
-        const newId = Number(lastId) + 1;
-        localStorage.setItem("lastUserId", newId);
-
-        return newId;
-    },
-
-    updateHabit(habitId, updates, usersList, actualUser) {
-        const habits = actualUser.habits;
-
-        const habit = habits.find(habit => habit.id === habitId);
-
+    async updateHabit(user, habitId, updates) {
+        const habit = user.habits.find(habit => habit.id === habitId);
         if (!habit) return;
 
         for (const key in updates) {
             habit[key] = updates[key];
         }
 
-        localStorage.setItem("users", JSON.stringify(usersList));
+        await this.updateUserHabits(user.id, user.habits);
     },
 
-    deleteHabit(habitIdToDelete, usersList, actualUser) {
-        const habitsList = actualUser.habits;
+    async deleteHabit(user, habitId) {
+        user.habits = user.habits.filter(habit => habit.id !== habitId);
+        await this.updateUserHabits(user.id, user.habits);
+    },
 
-        for (let habitIndex = 0; habitIndex < habitsList.length; habitIndex++) {
-            const currentHabit = habitsList[habitIndex];
+    saveSession(session) {
+        localStorage.setItem("actual_user", JSON.stringify(session));
+    },
 
-            if (currentHabit.id === habitIdToDelete) {
-                habitsList.splice(habitIndex, 1);
-                break;
-            }
-        }
+    getSession() {
+        const session = localStorage.getItem("actual_user");
+        return session ? JSON.parse(session) : null
+    },
 
-        storage.saveUsers(usersList);
-    }
+    clearSession() {
+        localStorage.removeItem("actual_user");
+    },
 
 
 };
